@@ -1,0 +1,17 @@
+{
+  "name": "recruiter-bot",
+  "version": "1.0.0",
+  "description": "a bot to gather and screen recruitment inquiries",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "regan little",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^4.5.3",
+    "botbuilder-dialogs": "^4.5.3",
+    "dotenv": "^8.1.0",
+    "restify": "^8.4.0"
+  }
+}
