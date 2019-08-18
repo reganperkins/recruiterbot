@@ -1,6 +1,6 @@
 const { ActivityHandler } = require('botbuilder');
 
-class Bot extends ActivityHandler {
+class DialogBot extends ActivityHandler {
   constructor(conversationState, userState, dialog) {
     super();
     this.conversationState = conversationState;
@@ -21,4 +21,4 @@ class Bot extends ActivityHandler {
   }
 }
 
-module.exports.Bot = Bot;
+module.exports.DialogBot = DialogBot;

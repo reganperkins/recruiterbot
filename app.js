@@ -5,7 +5,8 @@ const {
   MemoryStorage,
   UserState,
 } = require('botbuilder');
-const { Bot } = require('./bots/dialogBot');
+// const { DialogBot } = require('./bots/dialogBot');
+const { DialogAndWelcomeBot } = require('./bots/dialogAndWelcomeBot');
 const { JobProfileDialog } = require('./dialogs/jobProfileDialog');
 
 const adapter = new BotFrameworkAdapter({
@@ -23,7 +24,8 @@ const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);
 
 const dialog = new JobProfileDialog(userState);
-const bot = new Bot(conversationState, userState, dialog);
+// const bot = new DialogBot(conversationState, userState, dialog);
+const bot = new DialogAndWelcomeBot(conversationState, userState, dialog);
 
 const server = restify.createServer();
 server.listen(3978, () => {
