@@ -1,17 +1,24 @@
 const restify = require('restify');
+
+require('dotenv').config();
+
 const {
   BotFrameworkAdapter,
   ConversationState,
   MemoryStorage,
   UserState,
 } = require('botbuilder');
-// const { DialogBot } = require('./bots/dialogBot');
 const { DialogAndWelcomeBot } = require('./bots/dialogAndWelcomeBot');
 const { JobProfileDialog } = require('./dialogs/jobProfileDialog');
 
+// const adapter = new BotFrameworkAdapter({
+//   appId: process.env.MicrosoftAppId,
+//   appPassword: process.env.MicrosoftAppPassword,
+// });
+
 const adapter = new BotFrameworkAdapter({
-  appId: process.env.MicrosoftAppId,
-  appPassword: process.env.MicrosoftAppPassword,
+  appId: null,
+  appPassword: null,
 });
 
 adapter.onTurnError = async (context, error) => {
@@ -24,11 +31,10 @@ const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);
 
 const dialog = new JobProfileDialog(userState);
-// const bot = new DialogBot(conversationState, userState, dialog);
 const bot = new DialogAndWelcomeBot(conversationState, userState, dialog);
 
 const server = restify.createServer();
-server.listen(3978, () => {
+server.listen(process.env.port, () => {
   console.log(`${server.name} listening to ${server.url}`);
 });
 

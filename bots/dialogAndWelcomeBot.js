@@ -15,7 +15,6 @@ class DialogAndWelcomeBot extends DialogBot {
             ' ',
             ['https://media.giphy.com/media/MB5cRgSVDW4F2/source.gif'],
           );
-          console.log('CALLED onMembersAdded')
           await context.sendActivity({ attachments: [welcomeCard] });
           await dialog.run(context, conversationState.createProperty('DialogState'));
         }

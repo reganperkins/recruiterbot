@@ -1,5 +1,11 @@
 /* eslint-disable class-methods-use-this */
 const {
+  sendMail,
+  createTableStringFromObject,
+  createMailOptions,
+} = require('../utils/email');
+
+const {
   DialogSet,
   WaterfallDialog,
   ComponentDialog,
@@ -74,6 +80,7 @@ class JobProfileDialog extends ComponentDialog {
       }),
       () => stepContext.prompt('ChoicePrompt', {
         prompt: 'Do you have a specific job in mind?',
+        retryPrompt: 'I\'m sorry I did not understand you, use the buttons below if you have trouble',
         choices: ChoiceFactory.toChoices(['Yes', 'No']),
       }),
     );
@@ -96,7 +103,6 @@ class JobProfileDialog extends ComponentDialog {
     const { value } = stepContext.result;
     const text = value && value.toLowerCase() === 'vancouver' ? 'Awesome,' : 'Hmmm interesting,';
     stepContext.values.location = stepContext.result;
-    // this.jobProfile.location = stepContext.result;
     return stepContext.prompt('TextPrompt', {
       prompt: `${text} what are the main frameworks and languages used?`,
     });
@@ -107,7 +113,6 @@ class JobProfileDialog extends ComponentDialog {
 
   async companyName(stepContext) {
     stepContext.values.stack = stepContext.result;
-    // this.jobProfile.stack = stepContext.result;
     return stepContext.prompt('TextPrompt', {
       prompt: 'Sounds cool! What is the company name?',
     });
@@ -115,7 +120,6 @@ class JobProfileDialog extends ComponentDialog {
 
   async jobTitle(stepContext) {
     stepContext.values.company = stepContext.result;
-    // this.jobProfile.company = stepContext.result;
     return stepContext.prompt('TextPrompt', {
       prompt: 'And what is the position you are looking to fill?',
     });
@@ -123,7 +127,6 @@ class JobProfileDialog extends ComponentDialog {
 
   async jobPost(stepContext) {
     stepContext.values.title = stepContext.result;
-    // this.jobProfile.title = stepContext.result;
     return stepContext.prompt('TextPrompt', {
       prompt: 'Awesome, if you have a link to the job posting please enter it now.',
     });
@@ -131,7 +134,6 @@ class JobProfileDialog extends ComponentDialog {
 
   async startingSalary(stepContext) {
     stepContext.values.link = stepContext.result;
-    // this.jobProfile.link = stepContext.result;
     return stepContext.prompt('TextPrompt', {
       prompt: 'And now for the part everyone hates to ask: what is the annual salary?',
     });
@@ -139,7 +141,6 @@ class JobProfileDialog extends ComponentDialog {
 
   async extraInfo(stepContext) {
     stepContext.values.salary = stepContext.result;
-    // this.jobProfile.salary = stepContext.result;
     return stepContext.prompt('TextPrompt', {
       prompt: 'Okay, this all sounds great, is there anything else you would like me to know?',
     });
@@ -147,7 +148,6 @@ class JobProfileDialog extends ComponentDialog {
 
   async contactInfo(stepContext) {
     stepContext.values.extra = stepContext.result;
-    // this.jobProfile.extra = stepContext.result;
     return stepContext.prompt('TextPrompt', {
       prompt: 'One last thing, where can I contact you if I want to talk more about this opportunity?',
     });
@@ -155,8 +155,13 @@ class JobProfileDialog extends ComponentDialog {
 
   async thankYou(stepContext) {
     stepContext.values.contact = stepContext.result;
-    // this.jobProfile.contact = stepContext.result;
-    console.log('CALLED FINISH', this.jobProfile)
+    const stepValues = stepContext.values;
+    if (stepValues.instanceId) delete stepValues.instanceId;
+
+    const mailMessage = createTableStringFromObject(stepValues);
+    const mailOptions = createMailOptions(mailMessage);
+    sendMail(mailOptions);
+
     return stepContext.prompt('TextPrompt', {
       prompt: 'Thank you for thinking of me, I will be in touch if I think this position will be a good fit!',
     });
